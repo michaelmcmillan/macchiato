@@ -8,7 +8,6 @@ module.exports = Sonos;
 function Sonos (ip, port) {
     this.ip = ip;
     this.port = port || 1400;
-
 }
 
 /**
@@ -50,14 +49,7 @@ Sonos.prototype.request = function (path, service, action, argument) {
     var req = http.request(options, function(res) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
-          console.log([
-              '  +-----+    ',
-              '  |     |)   ',
-              '  `-----\'   ',
-              '___________  ',
-              '`---------\' ',
-              '* ' + action
-          ].join('\n'));
+          console.log(action);
       });
     });
 
