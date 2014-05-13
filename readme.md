@@ -20,8 +20,8 @@ It turns out each speaker acts as a uPnP endpoint.
 
 Macchiato spins up a static file server each time you run it on port 1337. The speakers
 then stream the audio files straight from Macchiato. This has several benefits:
-You can add your own audio files (rainy mood etc.) and you it will still work
-without an internet connection.
+You can add your own audio files (rainy mood etc.) and it will still work without
+an internet connection.
 
 ### To-do
 * Improve the user experience
