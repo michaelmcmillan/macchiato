@@ -24,6 +24,8 @@ You can add your own audio files (rainy mood etc.) and it will still work withou
 an internet connection.
 
 ### To-do
+If you want to help out please do a pull request. These are some of the things
+that needs twerking:
 * Improve the user experience
 * Use an xml-lib to create the Soap-requests.
 * Feature: Choose from a set of sounds.
