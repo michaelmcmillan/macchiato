@@ -1,8 +1,11 @@
 var Sonos = require ('./sonos.js');
+var audio = [
+   'http://coffitivity.com/sounds/audio/ogg/morning_murmur.ogg',
+   'http://coffitivity.com/sounds/audio/ogg/university_undertones.ogg',
+   'http://coffitivity.com/sounds/audio/ogg/lunchtime_lounge.ogg'
+];
 
-
-var play3 = new Sonos('192.168.1.229');
-
-play3.setQueue('http://coffitivity.com/sounds/audio/ogg/morning_murmur.ogg', function () {
-    play3.play();
+var sonosDevice = new Sonos(process.argv[2]);
+sonosDevice.setQueue(audio[0], function () {
+    sonosDevice.play();
 });
