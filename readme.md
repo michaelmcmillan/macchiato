@@ -27,6 +27,6 @@ It turns out each speaker acts as a uPnP endpoint.
 * Bug: Repeat when file is finished.
 
 ### References
-* [Coffitivity](http://vg.no) - An awesome app we borrow the audio from.
+* [Coffitivity](http://coffitivity.com/) - An awesome app we borrow the audio from.
 * [node-sonos](https://github.com/bencevans/node-sonos/blob/master/lib/sonos.js) - Insight into the uPnP protocol with Sonos.
 * [Dissecting the Sonos Controller](http://www.hirahim.com/blog/2012/04/29/dissecting-the-sonos-controller/) - Reverse engineering Sonos.
