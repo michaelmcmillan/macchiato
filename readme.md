@@ -5,9 +5,10 @@ Macchiato is a node.js application which turns your Sonos speakers into a coffe
 shop. It is meant for those who prefer to code with non-disturbing background
 noise.
 
-### Usage
+### Install & use
 ```shell
-node macchiato.js 192.168.1.229
+git clone https://github.com/michaelmcmillan/macchiato
+node macchiato/macchiato.js 192.168.1.229
 ```
 Macchiato only takes one argument: The ip address of the speaker you want to use.
 
@@ -25,6 +26,7 @@ It turns out each speaker acts as a uPnP endpoint.
 * Feature: Adjust volume from the command line.
 * Bug: Repeat when file is finished.
 
-### Credits
+### References
 * [Coffitivity](http://vg.no) - An awesome app we borrow the audio from.
 * [node-sonos](https://github.com/bencevans/node-sonos/blob/master/lib/sonos.js) - Insight into the uPnP protocol with Sonos.
+* [Dissecting the Sonos Controller](http://www.hirahim.com/blog/2012/04/29/dissecting-the-sonos-controller/) - Reverse engineering Sonos.
