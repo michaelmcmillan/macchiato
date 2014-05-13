@@ -7,7 +7,7 @@ module.exports = Sonos;
  */
 function Sonos (ip, port) {
     this.ip = ip;
-    this.port = 1400;
+    this.port = port || 1400;
 
 }
 
