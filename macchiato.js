@@ -31,8 +31,8 @@ function Macchiato () {
     // Hold speakers
     this.speakers = [];
 
-    // Local ip
-    this.ip = '192.168.1.4';
+    // Local ip & port
+    this.ip = 'http://192.168.1.4:1337';
 
     // Start the fileserver
     this.server();
@@ -54,7 +54,7 @@ Macchiato.prototype.addSpeaker = function (speaker) {
 Macchiato.prototype.transformIntoCoffeeShop = function () {
     var self = this;
     this.speakers.forEach(function (speaker) {
-        speaker.setQueue(self.ip + '/audio/morning.mp3', function () {
+        speaker.setQueue(self.ip + '/audio/university.mp3', function () {
             speaker.play();
         });
     });
@@ -68,8 +68,8 @@ Macchiato.prototype.server = function () {
     var self = this;
 
     http.createServer (function (request, response) {
-        if (self.audio.indexOf(request.url.substring(1)) !== -1) {
-            var filePath = request.url.substring(1);
+        var filePath = request.url.substring(1);
+        if (self.audio.indexOf(filePath) !== -1) {
             var stat = fs.statSync(filePath);
             response.writeHead(200, {
                 'Content-Type': 'audio/mp3',
@@ -77,12 +77,14 @@ Macchiato.prototype.server = function () {
             });
 
             fs.createReadStream(filePath).pipe(response);
+            console.log('[*] Macchiato: Streaming "%s" to speaker', filePath);
         }
+
     }).listen(1337);
 }
 
-var macchiato = new Macchiato();
-macchiato.addSpeaker(new Sonos(process.argv[2]));
+var macchiato = new Macchiato ();
+macchiato.addSpeaker(new Sonos (process.argv[2]));
 macchiato.transformIntoCoffeeShop();
 
 /*

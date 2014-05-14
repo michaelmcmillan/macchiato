@@ -49,7 +49,7 @@ Sonos.prototype.request = function (path, service, action, argument) {
     var req = http.request(options, function(res) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
-          console.log(action);
+          console.log ('[*] uPnP: ' + action);
       });
     });
 
