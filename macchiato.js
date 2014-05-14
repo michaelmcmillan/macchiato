@@ -11,13 +11,15 @@ function Macchiato (ip, port) {
     // Intro ascii
     this.intro = function () {
         console.log([
+            '     )))     ',
+            '    (((      ',
             '  +-----+    ',
             '  |     |)   ',
             '  `-----\'   ',
             '___________  ',
             '`---------\' ',
             ' Macchiato   ',
-            '   \n        '
+            '             '
         ].join('\n'));
     }();
 
@@ -38,6 +40,9 @@ function Macchiato (ip, port) {
 
     // Start the fileserver
     this.server();
+
+    // Register exit-handling
+    this.sigintHandler();
 }
 
 /**
@@ -87,6 +92,18 @@ Macchiato.prototype.server = function () {
             console.log ('[*] Macchiato: File not found.');
     }).listen(this.port);
 }
+
+/**
+ * exitHandler
+ * - Kicks in on sigint (synchronous only)
+ */
+Macchiato.prototype.sigintHandler = function () {
+    //process.on('SIGINT', function () {
+    //    console.log(code);
+        //console.log('[*] Macchiato: Goodbye!');
+    //});
+}
+
 
 /**
  * Program
