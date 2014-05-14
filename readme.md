@@ -21,7 +21,7 @@ ___________
 
 [*] uPnP: SetAVTransportURI
 [*] uPnP: Play
-[*] Macchiato: Streaming "audio/university.mp3 to speaker 192.168.1.229
+[*] Macchiato: Streaming "audio/university.mp3" to speaker 192.168.1.229
 ```
 Macchiato only takes one argument: The ip address of the speaker you want to use.
 
