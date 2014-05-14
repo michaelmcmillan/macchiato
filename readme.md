@@ -7,8 +7,21 @@ noise.
 
 ### Install & use
 ```shell
-git clone https://github.com/michaelmcmillan/macchiato
-node macchiato/macchiato.js 192.168.1.229
+$ git clone https://github.com/michaelmcmillan/macchiato
+$ node macchiato/macchiato.js 192.168.1.229
+
+     )))
+    (((
+  +-----+
+  |     |)
+  `-----'
+___________
+`---------'
+ Macchiato
+
+[*] uPnP: SetAVTransportURI
+[*] uPnP: Play
+[*] Macchiato: Streaming "audio/university.mp3 to speaker 192.168.1.229
 ```
 Macchiato only takes one argument: The ip address of the speaker you want to use.
 
@@ -26,6 +39,7 @@ an internet connection.
 ### To-do
 If you want to help out please do a pull request. These are some of the things
 that needs twerking:
+* Feature: Show percentage/seconds played of a track
 * Improve the user experience
 * Use an xml-lib to create the Soap-requests.
 * Feature: Choose from a set of sounds.
