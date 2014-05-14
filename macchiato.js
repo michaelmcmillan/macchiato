@@ -86,7 +86,7 @@ Macchiato.prototype.server = function () {
             });
 
             fs.createReadStream(filePath).pipe(response);
-            console.log ('[*] Macchiato: Streaming "%s to speaker %s', filePath, sonosIp);
+            console.log ('[*] Macchiato: Streaming "%s" to speaker %s', filePath, sonosIp);
         }
         else
             console.log ('[*] Macchiato: File not found.');
