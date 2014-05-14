@@ -6,7 +6,7 @@ var Sonos = require ('./sonos.js');
  * Macchiato
  * - Turn your Sonos speakers into a coffee shop!
  */
-function Macchiato () {
+function Macchiato (ip, port) {
 
     // Intro ascii
     this.intro = function () {
@@ -31,8 +31,10 @@ function Macchiato () {
     // Hold speakers
     this.speakers = [];
 
-    // Local ip & port
-    this.ip = 'http://192.168.1.4:1337';
+    // Local ip, port and host
+    this.ip = ip || '192.168.1.4';
+    this.port = port || 1337;
+    this.host = 'http://' + this.ip + ':' + this.port;
 
     // Start the fileserver
     this.server();
@@ -54,7 +56,7 @@ Macchiato.prototype.addSpeaker = function (speaker) {
 Macchiato.prototype.transformIntoCoffeeShop = function () {
     var self = this;
     this.speakers.forEach(function (speaker) {
-        speaker.setQueue(self.ip + '/audio/university.mp3', function () {
+        speaker.setQueue(self.host + '/audio/university.mp3', function () {
             speaker.play();
         });
     });
@@ -69,6 +71,8 @@ Macchiato.prototype.server = function () {
 
     http.createServer (function (request, response) {
         var filePath = request.url.substring(1);
+        var sonosIp  = request.connection.remoteAddress;
+
         if (self.audio.indexOf(filePath) !== -1) {
             var stat = fs.statSync(filePath);
             response.writeHead(200, {
@@ -77,19 +81,17 @@ Macchiato.prototype.server = function () {
             });
 
             fs.createReadStream(filePath).pipe(response);
-            console.log('[*] Macchiato: Streaming "%s" to speaker', filePath);
+            console.log ('[*] Macchiato: Streaming "%s to speaker %s', filePath, sonosIp);
         }
-
-    }).listen(1337);
+        else
+            console.log ('[*] Macchiato: File not found.');
+    }).listen(this.port);
 }
 
+/**
+ * Program
+ * - Transforms first argument speaker to a coffee shop
+ */
 var macchiato = new Macchiato ();
 macchiato.addSpeaker(new Sonos (process.argv[2]));
 macchiato.transformIntoCoffeeShop();
-
-/*
-var sonosDevice = new Sonos(process.argv[2]);
-sonosDevice.setQueue("lol.mp3", function () {
-    sonosDevice.play();
-});
-*/
