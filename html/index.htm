@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <meta charset="utf-8"></meta>
+        <title>Macchiato</title>
+        <style>
+        @import url(http://fonts.googleapis.com/css?family=Josefin+Sans:100,400);
+        * {
+          margin: 0;
+          padding: 0;
+        }
+
+        body {
+          font-family: 'Sintony', sans-serif;
+          font-size: 14px;
+          background: #ddd;
+          position: absolute;
+          top: 0;
+          right:0;
+          bottom: 0;
+          left: 0;
+        }
+
+        .center {
+           width: 600px;
+           height: 200px;
+           position: absolute;
+           left: 50%;
+           top: 60%;
+           margin-left: -300px;
+           margin-top: -150px;
+        }
+
+        #album {
+          float: left;
+          display: inline-block;
+          width: 150px;
+          height:150px;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          display: inline-block;
+        }
+
+        #content {
+          background: #FFF;
+          display: inline-block;
+          float: left;
+          width: 440px;
+          height: 150px;
+        }
+
+        .row {
+          width: 100%;
+          height: 50px;
+          text-align: center;
+          padding-top: 20px;
+          color: #555;
+        }
+        #lift {
+          margin-top: -25px;
+        }
+        #play {
+          margin-right: 10px;
+        }
+
+        #time {
+          margin-left: 10px;
+        }
+
+        #speaker {
+          height: 15px;
+          width: 15px;
+          float: right;
+          padding-right: 17px;
+          margin-top: -17px;
+        }
+
+        #play:hover {
+          cursor: pointer;
+        }
+
+        #progressbar {
+          background-color: #8B4513;
+          width:150px;
+          display: inline-block;
+        }
+
+        #progressbar > div {
+           background-color: #555;
+           width: 40%; /* Adjust with JavaScript */
+           height: 16px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="center">
+          <span id="album"><img src="http://i.imgur.com/gvyIy2u.png" /></span>
+          <span id="content">
+            <div id="title" class="row">University in the morning - Coffitivty</div>
+            <div class="row" id="lift">
+              <span id="play">&#9658;</span>
+              <div id="progressbar">
+                  <div id="percentbar"></div>
+              </div>
+              <span id="time">01:24</span>
+            </div>
+            <div class="row"></div>
+          </span>
+        </div>
+
+        <script>
+            function Player () {
+                this.elements = {
+                    "progressbar": document.getElementById("progressbar"),
+                    "percentbar": document.getElementById("percentbar"),
+                    "time": document.getElementById("time"),
+                    "title": document.getElementById("title")
+                }
+
+                this.elements.percentbar.style.width = '0%';
+            }
+
+            Player.prototype.changePercent = function (percent) {
+                var newPercent = parseInt(this.elements.percentbar.style.width) + percent;
+                if (newPercent <= 100)
+                    this.elements.percentbar.style.width = newPercent + '%';
+            }
+
+            Player.getSecondsPlayed = function () {
+
+            }
+
+            var lol = new Player();
+            setInterval(function () {
+                lol.changePercent(1);
+            }, 1000);
+        </script>
+    </body>
+</html>

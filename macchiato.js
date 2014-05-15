@@ -23,6 +23,9 @@ function Macchiato (ip, port) {
         ].join('\n'));
     }();
 
+    // User interface
+    this.userInterface = 'html/index.htm';
+
     // Audio files
     this.audio = [
        'audio/morning.mp3',
@@ -52,6 +55,27 @@ function Macchiato (ip, port) {
 Macchiato.prototype.addSpeaker = function (speaker) {
     if (speaker instanceof Sonos)
         this.speakers.push(speaker);
+}
+
+
+/**
+ * playAll
+ * - Pauses all speakers
+ */
+Macchiato.prototype.playAll = function () {
+    this.speakers.forEach(function (speaker) {
+        speaker.play();
+    });
+}
+
+/**
+ * pauseAll
+ * - Pauses all speakers
+ */
+Macchiato.prototype.pauseAll = function () {
+    this.speakers.forEach(function (speaker) {
+        speaker.pause();
+    });
 }
 
 /**
@@ -93,9 +117,32 @@ Macchiato.prototype.server = function () {
 
         /* User interface */
         else if (filePath == '') {
-            var body = '<h1>Helloooo</h1>';
+            var stat = fs.statSync(self.userInterface);
             response.writeHead(200, {
                 'Content-Type': 'text/html',
+                'Content-Length': /*stat.size*/ stat.size
+            });
+
+            fs.createReadStream(self.userInterface).pipe(response);
+        }
+
+        /* JSON API */
+        else if (filePath.indexOf('api/') !== -1) {
+            var args = filePath.split('/');
+            var success = false, message = '';
+            switch (args[1]) {
+                case 'play':  self.playAll();        success = true;  break;
+                case 'pause': self.pauseAll();       success = true;  break;
+                default: message = 'Illegal action'; success = false; break;
+            }
+
+            var body = JSON.stringify({
+                success: success,
+                message: message
+            });
+
+            response.writeHead(200, {
+                'Content-Type': 'application/json',
                 'Content-Length': body.length
             });
 
@@ -105,7 +152,7 @@ Macchiato.prototype.server = function () {
 
         /* Resource not found (400) */
         else {
-            var body = '404: Not found';
+            var body = 'File not found';
             response.writeHead(404, {
                 'Content-Type': 'text/plain',
                 'Content-Length': body.length
@@ -137,4 +184,4 @@ Macchiato.prototype.sigintHandler = function () {
  */
 var macchiato = new Macchiato ();
 macchiato.addSpeaker(new Sonos (process.argv[2]));
-macchiato.transformIntoCoffeeShop();
+//macchiato.transformIntoCoffeeShop();
