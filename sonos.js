@@ -1,4 +1,5 @@
 var http = require('http');
+var xml2js = require('xml2js');
 module.exports = Sonos;
 
 /**
@@ -31,7 +32,7 @@ Sonos.prototype.soap = function (service, action, argument) {
  * request
  * - Sends the soap request to the device
  */
-Sonos.prototype.request = function (path, service, action, argument) {
+Sonos.prototype.request = function (path, service, action, argument, callback) {
 
     var body = this.soap(service, action, argument);
     var options = {
@@ -46,9 +47,16 @@ Sonos.prototype.request = function (path, service, action, argument) {
           }
     };
 
-    var req = http.request(options, function(res) {
+    var req = http.request(options, function (res) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
+
+          // Spit back soap-response to cb
+          if (callback)
+            xml2js.parseString(chunk, function (err, result) {
+                if (!err) callback(result['s:Envelope']['s:Body']);
+            });
+
           console.log ('[*] uPnP: ' + action);
       });
     });
@@ -58,7 +66,7 @@ Sonos.prototype.request = function (path, service, action, argument) {
 }
 
 /**
- * play
+ * void play
  * - Emulates the play-button
  */
 Sonos.prototype.play = function () {
@@ -73,7 +81,7 @@ Sonos.prototype.play = function () {
 }
 
 /**
- * pause
+ * string pause
  * - Emulates the pause-button
  */
 Sonos.prototype.pause = function () {
@@ -88,7 +96,7 @@ Sonos.prototype.pause = function () {
 }
 
 /**
- * setVolume
+ * void setVolume
  * - Sets the volume (0-100)
  */
 Sonos.prototype.setVolume = function (volume) {
@@ -104,7 +112,26 @@ Sonos.prototype.setVolume = function (volume) {
 }
 
 /**
- * setQueue
+ * Int getVolume
+ * - Gets the volume (0-100)
+ */
+Sonos.prototype.getVolume = function (callback) {
+    this.request(
+        '/MediaRenderer/RenderingControl/Control',
+        'urn:schemas-upnp-org:service:RenderingControl:1',
+        'GetVolume',
+        '<InstanceID>0</InstanceID><Channel>Master</Channel>',
+        function (response) {
+            callback(parseInt(
+                response[0]['u:GetVolumeResponse']
+                        [0]['CurrentVolume'])
+            );
+        }
+    );
+}
+
+/**
+ * void setQueue
  * - Sets the queue with a uri and callbacks after 2000ms
  */
 Sonos.prototype.setQueue = function (uri, callback) {
@@ -117,5 +144,6 @@ Sonos.prototype.setQueue = function (uri, callback) {
         '</CurrentURI><CurrentURIMetaData></CurrentURIMetaData>'
     );
 
+    // This is not very stable.
     setTimeout(callback, 2000);
 }
