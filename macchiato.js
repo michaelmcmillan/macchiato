@@ -78,6 +78,7 @@ Macchiato.prototype.server = function () {
         var filePath = request.url.substring(1);
         var sonosIp  = request.connection.remoteAddress;
 
+        /* Stream audio file (200) */
         if (self.audio.indexOf(filePath) !== -1) {
             var stat = fs.statSync(filePath);
             response.writeHead(200, {
@@ -86,10 +87,35 @@ Macchiato.prototype.server = function () {
             });
 
             fs.createReadStream(filePath).pipe(response);
-            console.log ('[*] Macchiato: Streaming "%s" to speaker %s', filePath, sonosIp);
+            console.log ('[*] Macchiato: Streaming "%s" to speaker %s',
+                filePath, sonosIp);
         }
-        else
-            console.log ('[*] Macchiato: File not found.');
+
+        /* User interface */
+        else if (filePath == '') {
+            var body = '<h1>Helloooo</h1>';
+            response.writeHead(200, {
+                'Content-Type': 'text/html',
+                'Content-Length': body.length
+            });
+
+            response.write(body);
+            response.end();
+        }
+
+        /* Resource not found (400) */
+        else {
+            var body = '404: Not found';
+            response.writeHead(404, {
+                'Content-Type': 'text/plain',
+                'Content-Length': body.length
+            });
+
+            response.write(body);
+            response.end();
+            console.log ('[*] Macchiato: The file "%s" was not found.',
+                filePath);
+        }
     }).listen(this.port);
 }
 

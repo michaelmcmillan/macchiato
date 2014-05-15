@@ -51,10 +51,13 @@ Sonos.prototype.request = function (path, service, action, argument, callback) {
       res.setEncoding('utf8');
       res.on('data', function (chunk) {
 
-          // Spit back soap-response to cb
+          // Spit back soap-body to callback
           if (callback)
             xml2js.parseString(chunk, function (err, result) {
-                if (!err) callback(result['s:Envelope']['s:Body']);
+                if (!err)
+                    callback(result['s:Envelope']['s:Body']);
+                else
+                    console.log ('[*] uPnP: Error on ' + action);
             });
 
           console.log ('[*] uPnP: ' + action);
@@ -132,18 +135,15 @@ Sonos.prototype.getVolume = function (callback) {
 
 /**
  * void setQueue
- * - Sets the queue with a uri and callbacks after 2000ms
+ * - Sets the queue with a uri and callbacks when complete
  */
 Sonos.prototype.setQueue = function (uri, callback) {
-
     this.request(
         '/MediaRenderer/AVTransport/Control',
         'urn:schemas-upnp-org:service:AVTransport:1',
         'SetAVTransportURI',
         '<InstanceID>0</InstanceID><CurrentURI>'+ uri +
-        '</CurrentURI><CurrentURIMetaData></CurrentURIMetaData>'
+        '</CurrentURI><CurrentURIMetaData></CurrentURIMetaData>',
+        callback
     );
-
-    // This is not very stable.
-    setTimeout(callback, 2000);
 }
