@@ -127,6 +127,7 @@ Macchiato.prototype.server = function () {
         }
 
         /* JSON API */
+        // Currently not async.. So .. Yeah. Fix that.
         else if (filePath.indexOf('api/') !== -1) {
             var args = filePath.split('/');
             var success = false, message = '';
