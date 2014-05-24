@@ -34,7 +34,7 @@ Sonos.prototype.soap = function (service, action, argument) {
  */
 Sonos.prototype.request = function (path, service, action, argument, callback) {
 
-    var body = this.soap(service, action, argument);
+    var body = this.soap (service, action, argument);
     var options = {
           hostname: this.ip,
           port: this.port,
@@ -81,13 +81,14 @@ Sonos.prototype.request = function (path, service, action, argument, callback) {
  * void play
  * - Emulates the play-button
  */
-Sonos.prototype.play = function () {
+Sonos.prototype.play = function (callback) {
 
     this.request(
         '/MediaRenderer/AVTransport/Control',
         'urn:schemas-upnp-org:service:AVTransport:1',
         'Play',
-        '<InstanceID>0</InstanceID><Speed>1</Speed>'
+        '<InstanceID>0</InstanceID><Speed>1</Speed>',
+        callback
     );
 
 }
@@ -96,15 +97,15 @@ Sonos.prototype.play = function () {
  * string pause
  * - Emulates the pause-button
  */
-Sonos.prototype.pause = function () {
+Sonos.prototype.pause = function (callback) {
 
     this.request(
         '/MediaRenderer/AVTransport/Control',
         'urn:schemas-upnp-org:service:AVTransport:1',
         'Pause',
-        '<InstanceID>0</InstanceID><Speed>1</Speed>'
+        '<InstanceID>0</InstanceID><Speed>1</Speed>',
+        callback
     );
-
 }
 
 /**
