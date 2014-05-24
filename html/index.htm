@@ -61,8 +61,9 @@
         #lift {
           margin-top: -25px;
         }
-        #play {
+        #play, #pause {
           margin-right: 10px;
+          cursor: pointer;
         }
 
         #time {
@@ -96,11 +97,12 @@
     </head>
     <body>
         <div class="center">
-          <span id="album"><img src="http://i.imgur.com/gvyIy2u.png" /></span>
+          <span id="album"><img src="http://i.imgur.com/gvyIy2u.png"/></span>
           <span id="content">
             <div id="title" class="row">University in the morning - Coffitivty</div>
             <div class="row" id="lift">
-              <span id="play">&#9658;</span>
+              <span id="play"  style="display:none;">&#9658;</span>
+              <span id="pause" style="display:none;"><b>II</b></span>
               <div id="progressbar">
                   <div id="percentbar"></div>
               </div>
@@ -114,12 +116,47 @@
             function Player () {
                 this.elements = {
                     "progressbar": document.getElementById("progressbar"),
-                    "percentbar": document.getElementById("percentbar"),
-                    "time": document.getElementById("time"),
-                    "title": document.getElementById("title")
+                    "percentbar":  document.getElementById("percentbar"),
+                    "title":       document.getElementById("title"),
+                    "pause":       document.getElementById("pause"),
+                    "time":        document.getElementById("time"),
+                    "play":        document.getElementById("play")
                 }
 
                 this.elements.percentbar.style.width = '0%';
+                this.elements.play.style.display = 'inline';
+
+                this.registerEvents();
+            }
+
+            Player.prototype.request = function (url, callback) {
+                var xhr = new XMLHttpRequest ();
+                xhr.onreadystatechange = function () {
+                  if (this.readyState == 4 && this.status == 200) {
+                    callback(this.responseText);
+                  }
+                }
+
+                xhr.open('GET', '/api/' + url, true);
+                xhr.send(null);
+            }
+
+            Player.prototype.play = function (callback) {
+                var self = this;
+                this.request('play', function () {
+                    self.elements.play.style.display = 'none';
+                    self.elements.pause.style.display = 'inline';
+                    callback();
+                });
+            }
+
+            Player.prototype.pause = function (callback) {
+                var self = this;
+                this.request('pause', function () {
+                    self.elements.pause.style.display = 'none';
+                    self.elements.play.style.display = 'inline';
+                    callback();
+                });
             }
 
             Player.prototype.changePercent = function (percent) {
@@ -132,10 +169,25 @@
 
             }
 
-            var lol = new Player();
-            setInterval(function () {
-                lol.changePercent(1);
-            }, 1000);
+            Player.prototype.registerEvents = function () {
+                var self = this;
+
+                // Play
+                this.elements.play.onclick = function () {
+                    self.play(function () {
+
+                    });
+                }
+
+                // Pause
+                this.elements.pause.onclick = function () {
+                    self.pause(function () {
+
+                    });
+                }
+            }
+
+            new Player();
         </script>
     </body>
 </html>

@@ -115,19 +115,18 @@ Macchiato.prototype.server = function () {
                 filePath, sonosIp);
         }
 
-        /* User interface */
+        /* User interface (200) */
         else if (filePath == '') {
             var stat = fs.statSync(self.userInterface);
             response.writeHead(200, {
                 'Content-Type': 'text/html',
-                'Content-Length': /*stat.size*/ stat.size
+                'Content-Length': stat.size
             });
 
             fs.createReadStream(self.userInterface).pipe(response);
         }
 
-        /* JSON API */
-        // Currently not async.. So .. Yeah. Fix that.
+        /* JSON API (200) */
         else if (filePath.indexOf('api/') !== -1) {
             var args = filePath.split('/');
             var success = false, message = '';
@@ -139,7 +138,7 @@ Macchiato.prototype.server = function () {
 
             var body = JSON.stringify({
                 success: success,
-                message: message
+                message: message || "yey"
             });
 
             response.writeHead(200, {
@@ -151,7 +150,7 @@ Macchiato.prototype.server = function () {
             response.end();
         }
 
-        /* Resource not found (400) */
+        /* File not found (404) */
         else {
             var body = 'File not found';
             response.writeHead(404, {
@@ -161,8 +160,7 @@ Macchiato.prototype.server = function () {
 
             response.write(body);
             response.end();
-            console.log ('[*] Macchiato: The file "%s" was not found.',
-                filePath);
+            console.log ('[*] Macchiato: The file "%s" was not found.', filePath);
         }
     }).listen(this.port);
 }
@@ -184,5 +182,15 @@ Macchiato.prototype.sigintHandler = function () {
  * - Transforms first argument speaker to a coffee shop
  */
 var macchiato = new Macchiato ();
-macchiato.addSpeaker(new Sonos (process.argv[2]));
+var play3 = new Sonos (process.argv[2]);
+macchiato.addSpeaker(play3);
+
+
+play3.getPositionInfo(function (data) {
+    console.log(data['TrackDuration']);
+    console.log(data['RelTime']);
+});
+
+
+
 //macchiato.transformIntoCoffeeShop();

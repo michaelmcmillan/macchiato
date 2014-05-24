@@ -48,22 +48,31 @@ Sonos.prototype.request = function (path, service, action, argument, callback) {
     };
 
     var req = http.request(options, function (res) {
+      // Set charset
       res.setEncoding('utf8');
-      res.on('data', function (chunk) {
 
-          // Spit back soap-body to callback
+      // Buffer response
+      var data = [];
+      res.on('data', function (chunk) {
+          data.push(chunk);
+      });
+
+      // When request is finished
+      res.on('end', function () {
+          data = data.join('');
+
           if (callback)
-            xml2js.parseString(chunk, function (err, result) {
+            // Parse response
+            xml2js.parseString(data, function (err, result) {
                 if (!err)
                     callback(result['s:Envelope']['s:Body']);
                 else
-                    console.log ('[*] uPnP: Error on ' + action);
+                    console.log ('[*] uPnP: Error on ' + action, err);
             });
-
-          console.log ('[*] uPnP: ' + action);
       });
     });
 
+    // Write to request body
     req.write(body);
     req.end();
 }
@@ -145,5 +154,21 @@ Sonos.prototype.setQueue = function (uri, callback) {
         '<InstanceID>0</InstanceID><CurrentURI>'+ uri +
         '</CurrentURI><CurrentURIMetaData></CurrentURIMetaData>',
         callback
+    );
+}
+
+/**
+ * Object getPositionInfo
+ * - Retrives metadata for track
+ */
+Sonos.prototype.getPositionInfo = function (callback) {
+    this.request(
+        '/MediaRenderer/AVTransport/Control',
+        'urn:schemas-upnp-org:service:AVTransport:1',
+        'GetPositionInfo',
+        '<InstanceID>0</InstanceID>',
+        function (response) {
+            callback(response[0]['u:GetPositionInfoResponse'][0]);
+        }
     );
 }
